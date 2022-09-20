@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nested_route_sample/src/controller/root_controller.dart';
-import 'package:nested_route_sample/src/pages/explore/explore.dart';
-import 'package:nested_route_sample/src/pages/home/home.dart';
-import 'package:nested_route_sample/src/pages/setting/setting.dart';
 
-class Root extends GetView<RootController> {
+class Root extends GetView<RouteController> {
   Root({Key? key}) : super(key: key);
+
+  Widget _buildOffstageNavigator(int navKey) {
+    return Offstage(
+      offstage: controller.rootPageIndex.value != navKey,
+      child: Navigator(
+        key: Get.nestedKey(navKey),
+        onGenerateRoute: (currentRoute) {
+          return controller.onGenerateRoute(currentRoute, navKey);
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +35,11 @@ class Root extends GetView<RootController> {
                 ? const Text('Music Menu')
                 : const Text('Nested Route Sample'),
           ),
-          body: IndexedStack(
-            index: controller.rootPageIndex.value,
+          body: Stack(
             children: [
-              const Home(),
-              Navigator(
-                key: controller.navigatorKey,
-                onGenerateRoute: (routeSettings) {
-                  return MaterialPageRoute(
-                    builder: (context) => const Explore(),
-                  );
-                },
-              ),
-              const Setting(),
+              _buildOffstageNavigator(0),
+              _buildOffstageNavigator(1),
+              _buildOffstageNavigator(2),
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(

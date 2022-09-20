@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nested_route_sample/src/controller/root_controller.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class Home extends StatelessWidget {
             20,
             (index) => GestureDetector(
               onTap: () {
-                Get.toNamed('/detailPage');
+                Get.toNamed('/detailPage', id: RouteController.to.homeNavKey);
               },
               child: Container(
                 margin: const EdgeInsets.all(8),
